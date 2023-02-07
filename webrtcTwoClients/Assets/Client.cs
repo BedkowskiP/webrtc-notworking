@@ -9,12 +9,6 @@ public class Client : MonoBehaviour
     private RTCPeerConnection localPeer;
     private RTCPeerConnection remotePeer;
 
-    [SerializeField] private AudioSource _inputAudio;
-    [SerializeField] private AudioSource _outputAudio;
-
-    [SerializeField] private InputField localText;
-    [SerializeField] private InputField remoteText;
-
     private MediaStream sendStream;
     private MediaStream recvStream;
 
@@ -25,18 +19,41 @@ public class Client : MonoBehaviour
     int m_samplingFrequency = 48000;
     int m_lengthSeconds = 1;
 
-    private RTCDataChannel localChannel;
-    private RTCDataChannel remoteChannel;
+    private bool answered = false;
+    public bool autoStart = true;
 
-    private string localDesc;
     private string answer;
+
+    [Header("Buttons")]
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button createAnswerButton;
+    [SerializeField] private Button addAnswerButton;
+
+    [Header("Input fields")]
+    [SerializeField] private InputField localSdpField;
+    [SerializeField] private InputField createAnswerField;
+    [SerializeField] private InputField answerField;
+    [SerializeField] private InputField pasteAnswerField;
+
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource _inputAudio;
+    [SerializeField] private AudioSource _outputAudio;
 
 	private void Start()
 	{
         microphone = Microphone.devices[0];
         m_clipInput = Microphone.Start(microphone, true, m_lengthSeconds, m_samplingFrequency);
         Debug.Log("Selected microphone: " + microphone);
+		if (autoStart)
+		{
+            OnStart();
+		}
+    }
+
+    public void OnStart()
+	{
         CreatePeer();
+        startButton.enabled = false;
     }
 
     public void CreatePeer()
@@ -51,6 +68,7 @@ public class Client : MonoBehaviour
 
         localPeer.OnIceCandidate = e =>
         {
+            Debug.Log($"Local: IceCandidate: {e.Candidate}");
             remotePeer.AddIceCandidate(e);
         };
         localPeer.OnIceConnectionChange = (e) =>
@@ -69,6 +87,7 @@ public class Client : MonoBehaviour
 
         remotePeer.OnIceCandidate = e =>
         {
+            Debug.Log($"Remote: IceCandidate: {e.Candidate}");
             localPeer.AddIceCandidate(e);
         };
         remotePeer.OnIceConnectionChange = (e) =>
@@ -102,6 +121,11 @@ public class Client : MonoBehaviour
 	{
         StartCoroutine(CreateAnswerEnum());
     }
+    public void AddAnswer()
+    {
+        answer = pasteAnswerField.text;
+        answered = true;
+    }
 
     public void handleRemoteTrack(RTCTrackEvent e)
     {
@@ -129,9 +153,22 @@ public class Client : MonoBehaviour
         Debug.Log("Offer created");
         var desc = op1.Desc;
         var op2 = localPeer.SetLocalDescription(ref desc);
+        Debug.Log($"Offer: {desc.sdp}");
         yield return op2;
-        localText.text = desc.sdp;
+        localSdpField.text = desc.sdp;
         Debug.Log("Local negotiation done. Waiting for answer.");
+        while (!answered)
+		{
+            Debug.Log("waiting");
+            yield return null;
+        }
+        Debug.Log("Setting local peer remote description");
+        RTCSessionDescription desc2 = new RTCSessionDescription();
+        desc2.type = RTCSdpType.Answer;
+        desc2.sdp = answerField.text;
+        yield return desc2;
+        var op6 = localPeer.SetRemoteDescription(ref desc2);
+        yield return op6;
     }
 
     private IEnumerator CreateAnswerEnum()
@@ -139,7 +176,7 @@ public class Client : MonoBehaviour
         Debug.Log("Setting remote description");
         RTCSessionDescription desc = new RTCSessionDescription();
         desc.type = RTCSdpType.Offer;
-        desc.sdp = localText.text;
+        desc.sdp = localSdpField.text;
         var op3 = remotePeer.SetRemoteDescription(ref desc);
         yield return op3;
         Debug.Log("Creating answer");
@@ -148,44 +185,11 @@ public class Client : MonoBehaviour
         Debug.Log("Answer created");
         desc = op4.Desc;
         var op5 = remotePeer.SetLocalDescription(ref desc);
+        Debug.Log($"Answer: {desc.sdp}");
         yield return op5;
-        remoteText.text = desc.sdp;
+        answerField.text = desc.sdp;
         Debug.Log("Remote negotiation done. Add answer to local peer.");
     }
-
-    private IEnumerator SetLocalRemoteDesc()
-	{
-        RTCSessionDescription desc = new RTCSessionDescription();
-        desc.type = RTCSdpType.Answer;
-        desc.sdp = remoteText.text;
-        var op6 = localPeer.SetRemoteDescription(ref desc);
-        yield return op6;
-    }
-
-    public void buttonAction()
-    {
-        StartCoroutine(SetLocalRemoteDesc());
-    }
-
-    //private IEnumerator ExchangeOffer()
-    //{
-    //    var op1 = localPeer.CreateOffer();
-    //    yield return op1;
-    //    var desc = op1.Desc;
-    //    var op2 = localPeer.SetLocalDescription(ref desc);
-    //    yield return op2;
-    //    desc = op1.Desc;
-    //    var op3 = remotePeer.SetRemoteDescription(ref desc);
-    //    yield return op3;
-    //    var op4 = remotePeer.CreateAnswer();
-    //    yield return op4;
-    //    desc = op4.Desc;
-    //    var op5 = remotePeer.SetLocalDescription(ref desc);
-    //    yield return op5;
-    //    desc = op4.Desc;
-    //    var op6 = localPeer.SetRemoteDescription(ref desc);
-    //    yield return op6;
-    //}
 
     private static RTCConfiguration GetSelectedSdpSemantics()
     {
