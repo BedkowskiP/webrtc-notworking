@@ -83,10 +83,6 @@ public class Client : MonoBehaviour
         {
             Debug.Log($"Remote: IceGatheringStateChange: {e}");
         };
-        //remotePeer.OnNegotiationNeeded = () =>
-        //{
-        //    StartCoroutine(HandleRemoteNegotiation());
-        //};
 
         var transceiver2 = remotePeer.AddTransceiver(TrackKind.Audio);
         transceiver2.Direction = RTCRtpTransceiverDirection.RecvOnly;
@@ -102,40 +98,9 @@ public class Client : MonoBehaviour
         localPeer.AddTrack(m_audioTrack, sendStream);
     }
 
-    public void CreateRemotePeer()
+    public void CreateAnswer()
 	{
-        //recvStream = new MediaStream();
-        //recvStream.OnAddTrack += OnAddTrack;
-
-        //var configuration = GetSelectedSdpSemantics();
-        //remotePeer = new RTCPeerConnection(ref configuration);
-
-        //remotePeer.OnIceCandidate = e =>
-        //{
-        //    localPeer.AddIceCandidate(e);
-        //};
-        //remotePeer.OnIceConnectionChange = (e) =>
-        //{
-        //    Debug.Log($"Remote: IceConnectionChange: {e}");
-        //};
-        //remotePeer.OnConnectionStateChange = (e) =>
-        //{
-        //    Debug.Log($"Remote: ConnectionStateChange: {e}");
-        //};
-        //remotePeer.OnIceGatheringStateChange = (e) =>
-        //{
-        //    Debug.Log($"Remote: IceGatheringStateChange: {e}");
-        //};
-        //remotePeer.OnNegotiationNeeded = () =>
-        //{
-        //    StartCoroutine(HandleRemoteNegotiation());
-        //};
-
-        //var transceiver2 = remotePeer.AddTransceiver(TrackKind.Audio);
-        //transceiver2.Direction = RTCRtpTransceiverDirection.RecvOnly;
-
-        //remotePeer.OnTrack = (RTCTrackEvent e) => handleRemoteTrack(e);
-        StartCoroutine(HandleRemoteNegotiation());
+        StartCoroutine(CreateAnswerEnum());
     }
 
     public void handleRemoteTrack(RTCTrackEvent e)
@@ -169,12 +134,12 @@ public class Client : MonoBehaviour
         Debug.Log("Local negotiation done. Waiting for answer.");
     }
 
-    private IEnumerator HandleRemoteNegotiation()
+    private IEnumerator CreateAnswerEnum()
     {
         Debug.Log("Setting remote description");
         RTCSessionDescription desc = new RTCSessionDescription();
         desc.type = RTCSdpType.Offer;
-        desc.sdp = remoteText.text;
+        desc.sdp = localText.text;
         var op3 = remotePeer.SetRemoteDescription(ref desc);
         yield return op3;
         Debug.Log("Creating answer");
@@ -192,7 +157,7 @@ public class Client : MonoBehaviour
 	{
         RTCSessionDescription desc = new RTCSessionDescription();
         desc.type = RTCSdpType.Answer;
-        desc.sdp = localText.text;
+        desc.sdp = remoteText.text;
         var op6 = localPeer.SetRemoteDescription(ref desc);
         yield return op6;
     }
