@@ -1,0 +1,150 @@
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:13:51 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 149,9973ms
+moved types parse time: 60ms
+candidates parse time : 1ms
+C# parse time         : 170ms
+candidates check time : 43ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:13:54 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 66,0003ms
+moved types parse time: 59ms
+candidates parse time : 1ms
+C# parse time         : 170ms
+candidates check time : 39ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:14:57 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 78,193ms
+moved types parse time: 64ms
+candidates parse time : 1ms
+C# parse time         : 196ms
+candidates check time : 48ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:15:18 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 66,0122ms
+moved types parse time: 57ms
+candidates parse time : 1ms
+C# parse time         : 201ms
+candidates check time : 54ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:15:27 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 62,9993ms
+moved types parse time: 62ms
+candidates parse time : 1ms
+C# parse time         : 205ms
+candidates check time : 53ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:15:33 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 66,6521ms
+moved types parse time: 57ms
+candidates parse time : 1ms
+C# parse time         : 221ms
+candidates check time : 55ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:19:22 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 63,5509ms
+moved types parse time: 57ms
+candidates parse time : 1ms
+C# parse time         : 190ms
+candidates check time : 49ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:19:35 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 65,9987ms
+moved types parse time: 57ms
+candidates parse time : 1ms
+C# parse time         : 190ms
+candidates check time : 48ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:23:16 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 74,0568ms
+moved types parse time: 59ms
+candidates parse time : 1ms
+C# parse time         : 221ms
+candidates check time : 53ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:45:07 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 74,2278ms
+moved types parse time: 71ms
+candidates parse time : 1ms
+C# parse time         : 223ms
+candidates check time : 52ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:45:26 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 73,3751ms
+moved types parse time: 57ms
+candidates parse time : 1ms
+C# parse time         : 214ms
+candidates check time : 55ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:45:38 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 67,9986ms
+moved types parse time: 58ms
+candidates parse time : 1ms
+C# parse time         : 206ms
+candidates check time : 55ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 09:45:46 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 91,0748ms
+moved types parse time: 58ms
+candidates parse time : 1ms
+C# parse time         : 202ms
+candidates check time : 57ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 11:44:24 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 570,2226ms
+moved types parse time: 105ms
+candidates parse time : 2ms
+C# parse time         : 453ms
+candidates check time : 56ms
+console write time    : 0ms
+
+[api-updater (non-obsolete-error-filter)] 06.02.2023 13:14:59 : Starting D:/Programy/Unity Silnik/2020.3.38f1/Editor/Data/Tools/ScriptUpdater/APIUpdater.NonObsoleteApiUpdaterDetector.exe
+[api-updater (non-obsolete-error-filter)] 
+----------------------------------
+jit/startup time      : 498,7932ms
+moved types parse time: 59ms
+candidates parse time : 1ms
+C# parse time         : 235ms
+candidates check time : 53ms
+console write time    : 0ms
+
