@@ -129,11 +129,6 @@ public class Client : MonoBehaviour
         StartCoroutine(CreateAnswerEnum());
     }
 
-    public void AddAnswer()
-    {
-        answered = true;
-    }
-
     public void handleRemoteTrack(RTCTrackEvent e)
     {
         Debug.Log("HandleRemoteTrack");
@@ -192,6 +187,11 @@ public class Client : MonoBehaviour
         yield return StartCoroutine(ToJSON(desc.type, desc.sdp, pasteAnswerField));
         Debug.Log("Remote negotiation done. Add answer to local peer.");
         //answered = true;
+    }
+
+    public void AddAnswer()
+    {
+        answered = true;
     }
 
     private IEnumerator ToJSON(RTCSdpType type, string sdp, InputField field)
