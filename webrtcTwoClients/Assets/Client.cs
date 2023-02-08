@@ -23,7 +23,14 @@ public class Client : MonoBehaviour
     public bool autoStart = true;
 
     private string answer;
+    #region JSON_Classes
+    public class JSON_Offer
+    {
+        public RTCSdpType type;
+        public string sdp;
+    }
 
+    #endregion
     [Header("Buttons")]
     [SerializeField] private Button startButton;
     [SerializeField] private Button createAnswerButton;
@@ -121,9 +128,9 @@ public class Client : MonoBehaviour
 	{
         StartCoroutine(CreateAnswerEnum());
     }
+
     public void AddAnswer()
     {
-        answer = pasteAnswerField.text;
         answered = true;
     }
 
@@ -155,17 +162,13 @@ public class Client : MonoBehaviour
         var op2 = localPeer.SetLocalDescription(ref desc);
         Debug.Log($"Offer: {desc.sdp}");
         yield return op2;
-        localSdpField.text = desc.sdp;
+        yield return StartCoroutine(ToJSON(desc.type, desc.sdp, localSdpField));
         Debug.Log("Local negotiation done. Waiting for answer.");
-        while (!answered)
-		{
-            Debug.Log("waiting");
-            yield return null;
-        }
+        yield return StartCoroutine(WaitForAnswer());
         Debug.Log("Setting local peer remote description");
         RTCSessionDescription desc2 = new RTCSessionDescription();
         desc2.type = RTCSdpType.Answer;
-        desc2.sdp = answerField.text;
+        desc2.sdp = answer;
         yield return desc2;
         var op6 = localPeer.SetRemoteDescription(ref desc2);
         yield return op6;
@@ -175,8 +178,7 @@ public class Client : MonoBehaviour
     {
         Debug.Log("Setting remote description");
         RTCSessionDescription desc = new RTCSessionDescription();
-        desc.type = RTCSdpType.Offer;
-        desc.sdp = localSdpField.text;
+        desc = FromJSON(createAnswerField);
         var op3 = remotePeer.SetRemoteDescription(ref desc);
         yield return op3;
         Debug.Log("Creating answer");
@@ -187,8 +189,38 @@ public class Client : MonoBehaviour
         var op5 = remotePeer.SetLocalDescription(ref desc);
         Debug.Log($"Answer: {desc.sdp}");
         yield return op5;
-        answerField.text = desc.sdp;
+        yield return StartCoroutine(ToJSON(desc.type, desc.sdp, pasteAnswerField));
         Debug.Log("Remote negotiation done. Add answer to local peer.");
+        //answered = true;
+    }
+
+    private IEnumerator ToJSON(RTCSdpType type, string sdp, InputField field)
+	{
+        JSON_Offer offer = new JSON_Offer();
+        offer.type = type;
+        offer.sdp = sdp;
+        string json = JsonUtility.ToJson(offer);
+        field.text = json;
+        yield break;
+	}
+
+    private RTCSessionDescription FromJSON(InputField field)
+    {
+        RTCSessionDescription offer = new RTCSessionDescription();
+        offer = JsonUtility.FromJson<RTCSessionDescription>(field.text);
+        return offer;
+    }
+
+    private IEnumerator WaitForAnswer()
+	{
+        while (!answered)
+        {
+            Debug.Log("waiting");
+            yield return null;
+        }
+        answer = FromJSON(pasteAnswerField).sdp;
+        Debug.Log("Answered");
+        yield break;
     }
 
     private static RTCConfiguration GetSelectedSdpSemantics()

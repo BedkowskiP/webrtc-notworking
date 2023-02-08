@@ -864,7 +864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9528be4f65d7f4aa5726d810a67662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 0
+  autoStart: 1
   startButton: {fileID: 1546373716}
   createAnswerButton: {fileID: 1145700316}
   addAnswerButton: {fileID: 1110904213}
@@ -1918,7 +1918,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1197112580}
   m_Direction: 2
   m_Value: 1.0000001
-  m_Size: 0.012996703
+  m_Size: 0.0129967015
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2557,7 +2557,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1882647672}
   m_Direction: 2
   m_Value: 1.0000001
-  m_Size: 0.012994603
+  m_Size: 0.012994601
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
