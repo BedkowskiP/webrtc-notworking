@@ -23,6 +23,7 @@ public class Client : MonoBehaviour
     public bool autoStart = true;
 
     private string answer;
+
     #region JSON_Classes
     public class JSON_Offer
     {
@@ -31,6 +32,7 @@ public class Client : MonoBehaviour
     }
 
     #endregion
+
     [Header("Buttons")]
     [SerializeField] private Button startButton;
     [SerializeField] private Button createAnswerButton;
@@ -60,7 +62,7 @@ public class Client : MonoBehaviour
     public void OnStart()
 	{
         CreatePeer();
-        startButton.enabled = false;
+        //startButton.enabled = false;
     }
 
     public void CreatePeer()
@@ -76,7 +78,8 @@ public class Client : MonoBehaviour
         localPeer.OnIceCandidate = e =>
         {
             Debug.Log($"Local: IceCandidate: {e.Candidate}");
-            remotePeer.AddIceCandidate(e);
+            if(e.Candidate != null)
+                remotePeer.AddIceCandidate(e);
         };
         localPeer.OnIceConnectionChange = (e) =>
         {
@@ -95,7 +98,8 @@ public class Client : MonoBehaviour
         remotePeer.OnIceCandidate = e =>
         {
             Debug.Log($"Remote: IceCandidate: {e.Candidate}");
-            localPeer.AddIceCandidate(e);
+            if (e.Candidate != null)
+                localPeer.AddIceCandidate(e);
         };
         remotePeer.OnIceConnectionChange = (e) =>
         {
@@ -124,29 +128,6 @@ public class Client : MonoBehaviour
         localPeer.AddTrack(m_audioTrack, sendStream);
     }
 
-    public void CreateAnswer()
-	{
-        StartCoroutine(CreateAnswerEnum());
-    }
-
-    public void handleRemoteTrack(RTCTrackEvent e)
-    {
-        Debug.Log("HandleRemoteTrack");
-        if (e.Track is AudioStreamTrack)
-        {
-            recvStream.AddTrack(e.Track);
-        }
-    }
-
-    void OnAddTrack(MediaStreamTrackEvent e)
-    {
-        Debug.Log("OnAddTrack");
-        var track = e.Track as AudioStreamTrack;
-        _outputAudio.SetTrack(track);
-        _outputAudio.loop = true;
-        _outputAudio.Play();
-    }
-
     private IEnumerator HandleLocalNegotiation()
 	{
         Debug.Log("Creating offer");
@@ -156,9 +137,10 @@ public class Client : MonoBehaviour
         var desc = op1.Desc;
         var op2 = localPeer.SetLocalDescription(ref desc);
         Debug.Log($"Offer: {desc.sdp}");
+        Debug.Log($"LocalDesc: {localPeer.LocalDescription.sdp}");
         yield return op2;
-        yield return StartCoroutine(ToJSON(desc.type, desc.sdp, localSdpField));
         Debug.Log("Local negotiation done. Waiting for answer.");
+        ToJSON(desc.type, localPeer.LocalDescription.sdp, localSdpField);
         yield return StartCoroutine(WaitForAnswer());
         Debug.Log("Setting local peer remote description");
         RTCSessionDescription desc2 = new RTCSessionDescription();
@@ -181,12 +163,13 @@ public class Client : MonoBehaviour
         yield return op4;
         Debug.Log("Answer created");
         desc = op4.Desc;
+        //yield return StartCoroutine(WaitForAnswer());
         var op5 = remotePeer.SetLocalDescription(ref desc);
         Debug.Log($"Answer: {desc.sdp}");
         yield return op5;
-        yield return StartCoroutine(ToJSON(desc.type, desc.sdp, pasteAnswerField));
+        ToJSON(desc.type, remotePeer.LocalDescription.sdp, answerField);
         Debug.Log("Remote negotiation done. Add answer to local peer.");
-        //answered = true;
+		//answered = true;
     }
 
     public void AddAnswer()
@@ -194,14 +177,13 @@ public class Client : MonoBehaviour
         answered = true;
     }
 
-    private IEnumerator ToJSON(RTCSdpType type, string sdp, InputField field)
+    private void ToJSON(RTCSdpType type, string sdp, InputField field)
 	{
         JSON_Offer offer = new JSON_Offer();
         offer.type = type;
         offer.sdp = sdp;
         string json = JsonUtility.ToJson(offer);
         field.text = json;
-        yield break;
 	}
 
     private RTCSessionDescription FromJSON(InputField field)
@@ -220,13 +202,37 @@ public class Client : MonoBehaviour
         }
         answer = FromJSON(pasteAnswerField).sdp;
         Debug.Log("Answered");
-        yield break;
+    }
+
+    public void CreateAnswer()
+    {
+        StartCoroutine(CreateAnswerEnum());
+    }
+
+    public void handleRemoteTrack(RTCTrackEvent e)
+    {
+        Debug.Log("HandleRemoteTrack");
+        if (e.Track is AudioStreamTrack)
+        {
+            recvStream.AddTrack(e.Track);
+        }
+    }
+
+    void OnAddTrack(MediaStreamTrackEvent e)
+    {
+        Debug.Log("OnAddTrack");
+        var track = e.Track as AudioStreamTrack;
+        _outputAudio.SetTrack(track);
+        _outputAudio.loop = true;
+        _outputAudio.Play();
     }
 
     private static RTCConfiguration GetSelectedSdpSemantics()
     {
         RTCConfiguration config = default;
         config.iceServers = new[] { new RTCIceServer { urls = new[] { "stun:stun.l.google.com:19302" } } };
+        config.bundlePolicy = RTCBundlePolicy.BundlePolicyMaxBundle;
+
 
         return config;
     }
