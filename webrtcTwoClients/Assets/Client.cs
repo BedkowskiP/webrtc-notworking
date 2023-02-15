@@ -24,6 +24,8 @@ public class Client : MonoBehaviour
 
     private string answer;
 
+    private RTCOfferAnswerOptions options;
+
     #region JSON_Classes
     public class JSON_Offer
     {
@@ -50,6 +52,9 @@ public class Client : MonoBehaviour
 
 	private void Start()
 	{
+        RTCOfferAnswerOptions options = new RTCOfferAnswerOptions();
+        options.iceRestart = true;
+
         microphone = Microphone.devices[0];
         m_clipInput = Microphone.Start(microphone, true, m_lengthSeconds, m_samplingFrequency);
         Debug.Log("Selected microphone: " + microphone);
@@ -88,10 +93,12 @@ public class Client : MonoBehaviour
         localPeer.OnConnectionStateChange = (e) =>
         {
             Debug.Log($"Local: ConnectionStateChange: {e}");
+            
         };
         localPeer.OnIceGatheringStateChange = (e) =>
         {
             Debug.Log($"Local: IceGatheringStateChange: {e}");
+            
         };
         localPeer.OnNegotiationNeeded = () => StartCoroutine(HandleLocalNegotiation());
 
@@ -129,18 +136,18 @@ public class Client : MonoBehaviour
     }
 
     private IEnumerator HandleLocalNegotiation()
-	{
+    {
+        
         Debug.Log("Creating offer");
-        var op1 = localPeer.CreateOffer();
+        var op1 = localPeer.CreateOffer(ref options);
         yield return op1;
         Debug.Log("Offer created");
         var desc = op1.Desc;
         var op2 = localPeer.SetLocalDescription(ref desc);
-        Debug.Log($"Offer: {desc.sdp}");
-        Debug.Log($"LocalDesc: {localPeer.LocalDescription.sdp}");
+        Debug.Log($"Offer: {localPeer.LocalDescription.sdp}");
         yield return op2;
-        Debug.Log("Local negotiation done. Waiting for answer.");
         ToJSON(desc.type, localPeer.LocalDescription.sdp, localSdpField);
+        Debug.Log("Local negotiation done. Waiting for answer.");
         yield return StartCoroutine(WaitForAnswer());
         Debug.Log("Setting local peer remote description");
         RTCSessionDescription desc2 = new RTCSessionDescription();
@@ -149,6 +156,7 @@ public class Client : MonoBehaviour
         yield return desc2;
         var op6 = localPeer.SetRemoteDescription(ref desc2);
         yield return op6;
+        if (op6.IsError) Debug.Log(op6.Error);
     }
 
     private IEnumerator CreateAnswerEnum()
@@ -159,17 +167,17 @@ public class Client : MonoBehaviour
         var op3 = remotePeer.SetRemoteDescription(ref desc);
         yield return op3;
         Debug.Log("Creating answer");
-        var op4 = remotePeer.CreateAnswer();
+        var op4 = remotePeer.CreateAnswer(ref options);
         yield return op4;
         Debug.Log("Answer created");
         desc = op4.Desc;
         //yield return StartCoroutine(WaitForAnswer());
         var op5 = remotePeer.SetLocalDescription(ref desc);
-        Debug.Log($"Answer: {desc.sdp}");
         yield return op5;
+        Debug.Log($"Answer: {remotePeer.LocalDescription.sdp}");
         ToJSON(desc.type, remotePeer.LocalDescription.sdp, answerField);
         Debug.Log("Remote negotiation done. Add answer to local peer.");
-		//answered = true;
+        //answered = true;
     }
 
     public void AddAnswer()
@@ -230,9 +238,38 @@ public class Client : MonoBehaviour
     private static RTCConfiguration GetSelectedSdpSemantics()
     {
         RTCConfiguration config = default;
-        config.iceServers = new[] { new RTCIceServer { urls = new[] { "stun:stun.l.google.com:19302" } } };
-        config.bundlePolicy = RTCBundlePolicy.BundlePolicyMaxBundle;
+        config.iceServers = new[] {
+			new RTCIceServer {
+                urls = new[] {
+                    "stun:relay.metered.ca:80"
+                    }
+			},
+			new RTCIceServer
+			{
+				urls = new[] {
+					"turn:relay.metered.ca:80"
+					},
+				username = "d2d749feafa6ce4889dcc085",
+				credential = "eIhOg/8GijfCjDfR"
+			},
+            new RTCIceServer
+            {
+                urls = new[] {
+                    "turn:relay.metered.ca:443"
+                    },
+                username = "d2d749feafa6ce4889dcc085",
+                credential = "eIhOg/8GijfCjDfR"
+            },
+            new RTCIceServer
+            {
+                urls = new[] {
+                    "turn:relay.metered.ca:443?transport=tcp"
+                    },
+                username = "d2d749feafa6ce4889dcc085",
+                credential = "eIhOg/8GijfCjDfR"
+            }
 
+        };
 
         return config;
     }
